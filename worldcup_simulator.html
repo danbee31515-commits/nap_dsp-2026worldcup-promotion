@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>nap dsp 2026 World Cup 패키지 혜택 시뮬레이터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root {
+    --bg: #F4F6FB;
+    --paper: #FFFFFF;
+    --line: #DDE3EE;
+    --ink: #020F2A;
+    --sub: #5A6480;
+    --navy: #020F2A;
+    --navy-2: #0A1A3D;
+    --blue: #326295;
+    --cyan: #00B5E2;
+    --magenta: #E50087;
+    --yellow: #FFD100;
+    --green: #00A859;
+    --orange: #FF7A00;
+    --accent-soft: #E8F4FB;
+    --magenta-soft: #FFE6F1;
+    --good: #008F4C;
+    --good-soft: #E1F4EA;
+    --bad: #D72638;
+    --bad-soft: #FCE6E8;
+    --warn: #B8860B;
+    --warn-soft: #FFF7D6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Poppins", "Noto Sans KR", "맑은 고딕", "Malgun Gothic", system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    line-break: strict;
+  }
+
+  /* Header */
+  .top-stripe { height: 5px; background: linear-gradient(90deg, var(--cyan) 0%, var(--magenta) 33%, var(--yellow) 66%, var(--green) 100%); }
+  .hero {
+    position: relative;
+    background:
+      radial-gradient(ellipse 500px 200px at 85% 30%, rgba(229,0,135,0.25), transparent 60%),
+      radial-gradient(ellipse 500px 180px at 15% 80%, rgba(0,181,226,0.25), transparent 60%),
+      linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: white;
+    padding: 28px 36px 24px;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "26"; position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+    font-family: "Poppins", sans-serif; font-weight: 900; font-size: 160px;
+    letter-spacing: -8px; color: rgba(255,255,255,0.06); line-height: 0.85; pointer-events: none;
+  }
+  .hero .row { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; }
+  .badge-wc {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px 4px 8px; background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.25); border-radius: 999px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    margin-bottom: 6px; text-transform: uppercase;
+  }
+  .badge-wc .dot { width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--magenta), var(--cyan)); }
+  .hero h1 { font-size: 24px; margin: 4px 0 4px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.2; }
+  .hero h1 .accent { background: linear-gradient(90deg, var(--cyan), #5BD4FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero .sub { font-size: 12px; color: rgba(255,255,255,0.78); }
+
+  /* Layout */
+  .container { max-width: 1280px; margin: 18px auto 40px; padding: 0 24px; display: grid; grid-template-columns: minmax(0, 1fr) 480px; gap: 18px; }
+  @media (max-width: 1020px) { .container { grid-template-columns: 1fr; } .result-col { position: static !important; } }
+
+  /* Form panel */
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(2,15,42,0.04);
+  }
+  .panel h2 {
+    font-size: 14px; font-weight: 800; color: var(--navy); margin: 0 0 12px;
+    letter-spacing: -0.2px; padding-bottom: 6px;
+    display: inline-block; position: relative;
+  }
+  .panel h2::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--magenta)); border-radius: 2px; }
+  .panel h2 .step-num {
+    display: inline-block; width: 22px; height: 22px;
+    background: var(--navy); color: white; border-radius: 50%;
+    text-align: center; line-height: 22px; font-size: 11px; margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Form controls */
+  .field { margin-bottom: 10px; }
+  .field label {
+    display: block; font-size: 11px; font-weight: 700; color: var(--navy);
+    margin-bottom: 4px; letter-spacing: -0.1px;
+  }
+  .field input[type="text"], .field input[type="number"], .field input[type="date"], .field select {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px;
+    font-family: inherit; font-size: 13px; background: var(--paper); color: var(--ink);
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,181,226,0.15); }
+  .field select option:disabled { color: #ccc; }
+  .field .hint { font-size: 10px; color: var(--sub); margin-top: 3px; }
+  .field .alert {
+    font-size: 11px; padding: 7px 10px; border-radius: 6px; margin-top: 6px;
+    border: 1px solid; line-height: 1.5;
+  }
+  .field .alert.warn { background: var(--warn-soft); border-color: #E6C75A; color: #6B4F00; }
+  .field .alert.bad { background: var(--bad-soft); border-color: #E89999; color: var(--bad); }
+  .field .alert.good { background: var(--good-soft); border-color: #91D1A5; color: var(--good); }
+
+  /* Radio / Checkbox */
+  .radio-group, .check-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .radio-group label, .check-group label {
+    flex: 1; min-width: 80px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px;
+    cursor: pointer; transition: all 0.15s;
+    font-size: 12px; font-weight: 600; margin-bottom: 0;
+  }
+  .radio-group label:hover, .check-group label:hover { border-color: var(--cyan); background: var(--accent-soft); }
+  .radio-group input[type="radio"]:checked + span, .check-group input[type="checkbox"]:checked + span { color: var(--magenta); font-weight: 800; }
+  .radio-group label:has(input:checked), .check-group label:has(input:checked) { border-color: var(--magenta); background: var(--magenta-soft); }
+  .radio-group input, .check-group input { margin: 0; accent-color: var(--magenta); }
+
+  /* Two-col date */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Bonus card selection */
+  .bonus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .bonus-grid label {
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 11px;
+    cursor: pointer; transition: all 0.15s; position: relative;
+    background: var(--paper);
+  }
+  .bonus-grid label:hover { border-color: var(--cyan); }
+  .bonus-grid label:has(input:checked) { border: 2px solid var(--magenta); background: var(--magenta-soft); }
+  .bonus-grid label input { position: absolute; opacity: 0; pointer-events: none; }
+  .bonus-grid .b-tag { font-size: 9px; font-weight: 800; color: var(--cyan); letter-spacing: 1.2px; }
+  .bonus-grid label:has(input:checked) .b-tag { color: var(--magenta); }
+  .bonus-grid .b-name { font-size: 13px; font-weight: 800; margin: 3px 0; color: var(--navy); }
+  .bonus-grid .b-meta { font-size: 10px; color: var(--sub); line-height: 1.4; }
+
+  /* Audience pack selection */
+  .pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .pack-grid label {
+    border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px;
+    cursor: pointer; transition: all 0.15s; position: relative;
+    background: var(--paper); display: block;
+  }
+  .pack-grid label:hover { border-color: var(--cyan); }
+  .pack-grid label:has(input:checked) { border: 2px solid var(--magenta); background: var(--magenta-soft); }
+  .pack-grid label input { margin-right: 6px; accent-color: var(--magenta); }
+  .pack-grid .p-name { font-size: 12px; font-weight: 800; color: var(--navy); display: inline-block; }
+  .pack-grid .p-desc { font-size: 10px; color: var(--sub); margin-top: 3px; line-height: 1.45; }
+  .pack-grid .p-rec { font-size: 9.5px; color: var(--navy); margin-top: 3px; line-height: 1.4; }
+
+  /* Result panel (right column) */
+  .result-col { position: sticky; top: 16px; align-self: start; }
+  .result {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(2,15,42,0.08);
+  }
+  .result-head {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: white;
+    padding: 14px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-head::after {
+    content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--cyan) 0%, var(--magenta) 100%);
+  }
+  .result-head .ttl { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; }
+  .result-head .sub { font-size: 11px; opacity: 0.78; margin-top: 2px; }
+
+  .result-body { padding: 16px 18px 20px; }
+  .info-box {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--cyan);
+    padding: 9px 11px; border-radius: 0 6px 6px 0;
+    font-size: 11px; color: var(--sub); margin-bottom: 12px; line-height: 1.5;
+  }
+  .info-box .em { color: var(--navy); font-weight: 700; }
+
+  .summary-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px;
+    font-size: 12px; padding: 5px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .l { color: var(--sub); }
+  .summary-row .v { color: var(--navy); font-weight: 700; }
+  .summary-row .v.big { font-size: 14px; color: var(--magenta); }
+
+  .product-card {
+    border: 1px solid var(--line); border-radius: 8px; padding: 12px;
+    margin-top: 12px; background: var(--paper);
+    position: relative; overflow: hidden;
+  }
+  .product-card.booking { border-color: var(--navy); }
+  .product-card.bonus { border-color: var(--magenta); background: linear-gradient(135deg, #FFFFFF 0%, var(--magenta-soft) 100%); }
+  .product-card .pc-tag {
+    display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: 1.3px;
+    padding: 2px 7px; border-radius: 999px; text-transform: uppercase;
+  }
+  .product-card.booking .pc-tag { background: var(--navy); color: white; }
+  .product-card.bonus .pc-tag { background: var(--magenta); color: white; }
+  .product-card .pc-name { font-size: 13px; font-weight: 800; margin: 3px 0; color: var(--navy); }
+  .product-card .pc-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px;
+    margin-top: 6px;
+  }
+  .product-card .pc-cell .lbl { font-size: 10px; color: var(--sub); }
+  .product-card .pc-cell .val { font-size: 14px; font-weight: 800; color: var(--navy); }
+  .product-card .pc-cell .val.accent { color: var(--magenta); }
+  .product-card .pc-note { font-size: 10px; color: var(--sub); margin-top: 6px; line-height: 1.5; }
+  .product-card .pc-summary {
+    font-size: 12.5px;
+    color: var(--navy);
+    margin: 4px 0 8px;
+    line-height: 1.6;
+    font-weight: 600;
+  }
+  .product-card .pc-summary strong { font-size: 14px; font-weight: 800; color: var(--navy); }
+
+  /* Action buttons */
+  .actions { margin-top: 16px; display: flex; gap: 8px; }
+  .btn {
+    flex: 1;
+    padding: 12px 14px;
+    border: none; border-radius: 8px;
+    font-family: inherit; font-size: 12.5px; font-weight: 800;
+    cursor: pointer; transition: transform 0.15s;
+    text-decoration: none; text-align: center;
+    letter-spacing: -0.2px;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.primary {
+    background: linear-gradient(90deg, var(--magenta) 0%, #FF3DA0 100%);
+    color: white;
+    box-shadow: 0 6px 18px rgba(229,0,135,0.35);
+  }
+  .btn.secondary {
+    background: var(--navy); color: white;
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .footer-bar {
+    max-width: 1280px; margin: 0 auto; padding: 14px 24px 20px;
+    font-size: 11px; color: var(--sub); display: grid;
+    grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+    border-top: 1px solid var(--line); margin-top: 8px;
+  }
+  .footer-bar .brand { font-size: 13px; font-weight: 900; color: var(--navy); }
+  .footer-bar .brand::after { content: " ●"; color: var(--magenta); }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(2,15,42,0.55);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--paper); border-radius: 12px; padding: 24px;
+    max-width: 520px; width: 100%;
+    box-shadow: 0 12px 40px rgba(2,15,42,0.30);
+  }
+  .modal h3 { margin: 0 0 8px; font-size: 17px; font-weight: 800; color: var(--navy); }
+  .modal p { margin: 0 0 10px; font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .modal ol { margin: 0 0 14px; padding-left: 20px; font-size: 13px; line-height: 1.7; color: var(--ink); }
+  .modal ol li { margin-bottom: 4px; }
+  .modal .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  .modal .modal-actions .btn { flex: 0 0 auto; padding: 10px 16px; }
+  .modal .modal-actions .btn.ghost { background: var(--line); color: var(--ink); }
+
+  /* Capture target (for html2canvas) */
+  #capture-zone { /* same as visible */ }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--navy); color: white; padding: 10px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 700; z-index: 200;
+    box-shadow: 0 6px 20px rgba(2,15,42,0.3);
+    opacity: 0; transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Hide capture-only elements during view, show during capture */
+  .capture-only { display: none; }
+  .capturing .capture-only { display: block; }
+  .capturing .no-capture { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="top-stripe"></div>
+<header class="hero">
+  <div class="row">
+    <span class="badge-wc"><span class="dot"></span>2026 FIFA WORLD CUP · 혜택 시뮬레이터</span>
+    <h1>예상 단가·노출·클릭을 <span class="accent">직접 확인</span>해보세요.</h1>
+    <p class="sub">광고주 조건을 입력하면 실시간으로 계산됩니다. 시뮬레이션 결과는 캡쳐 후 메일로 바로 전송 가능.</p>
+  </div>
+</header>
+
+<div id="capture-zone">
+<div class="container">
+
+  <!-- ============ LEFT: INPUT PANEL ============ -->
+  <div class="input-col">
+
+    <!-- Step 1: 광고주 -->
+    <div class="panel">
+      <h2><span class="step-num">1</span>광고주 정보</h2>
+      <div class="two-col">
+        <div class="field">
+          <label>광고주 명</label>
+          <input type="text" id="advName" placeholder="예: ABC 컴퍼니" oninput="recalc()">
+        </div>
+        <div class="field">
+          <label>캠페인 명</label>
+          <input type="text" id="campName" placeholder="예: 2026 월드컵 브랜드 캠페인" oninput="recalc()">
+        </div>
+      </div>
+      <div class="field">
+        <label>광고주 업종 (IAB 카테고리)</label>
+        <select id="iabSelect" onchange="onIabChange()"></select>
+        <div id="iabAlert"></div>
+      </div>
+    </div>
+
+    <!-- Step 2: 대행사 -->
+    <div class="panel">
+      <h2><span class="step-num">2</span>대행사 정보</h2>
+      <div class="radio-group" id="agencyGroup">
+        <label><input type="radio" name="agency" value="yes" onchange="onAgencyChange()"><span>있음 (수수료 +20%)</span></label>
+        <label><input type="radio" name="agency" value="no" checked onchange="onAgencyChange()"><span>없음</span></label>
+      </div>
+      <div class="field" id="agencyNameField" style="display:none; margin-top: 10px;">
+        <label>대행사 명</label>
+        <input type="text" id="agencyName" placeholder="대행사 명 입력" oninput="recalc()">
+      </div>
+    </div>
+
+    <!-- Step 3: 렙사 -->
+    <div class="panel">
+      <h2><span class="step-num">3</span>렙사 정보</h2>
+      <div class="radio-group" id="repGroup">
+        <label><input type="radio" name="rep" value="yes" onchange="onRepChange()"><span>있음 (수수료 +10%)</span></label>
+        <label><input type="radio" name="rep" value="no" checked onchange="onRepChange()"><span>없음</span></label>
+      </div>
+      <div class="field" id="repNameField" style="display:none; margin-top: 10px;">
+        <label>렙사 명</label>
+        <input type="text" id="repName" placeholder="렙사 명 입력" oninput="recalc()">
+      </div>
+    </div>
+
+    <!-- Step 4: 기간 -->
+    <div class="panel">
+      <h2><span class="step-num">4</span>캠페인 기간</h2>
+      <div class="two-col">
+        <div class="field">
+          <label>시작일</label>
+          <input type="date" id="dateStart" onchange="recalc()">
+        </div>
+        <div class="field">
+          <label>종료일</label>
+          <input type="date" id="dateEnd" onchange="recalc()">
+        </div>
+      </div>
+      <div class="hint" id="periodHint" style="font-size: 11px; color: var(--sub); margin-top: 4px;">예산 구간은 1개월(31일) 환산 예산 기준으로 적용됩니다.</div>
+    </div>
+
+    <!-- Step 5: 예산 -->
+    <div class="panel">
+      <h2><span class="step-num">5</span>부킹 예산</h2>
+      <div class="field">
+        <label>부킹 예산 (VAT 별도, 원)</label>
+        <input type="number" id="budget" placeholder="예: 50000000" min="0" step="1000000" oninput="recalc()">
+        <div class="hint" id="budgetHint">최소 부킹 500만원부터. 1개월 환산 예산으로 단가 구간 자동 적용.</div>
+      </div>
+    </div>
+
+    <!-- Step 6: 보너스 상품 -->
+    <div class="panel">
+      <h2><span class="step-num">6</span>보너스 노출 상품 (3종 중 택 1)</h2>
+      <div class="bonus-grid" id="bonusGroup">
+        <label>
+          <input type="radio" name="bonus" value="video_brand_lift" onchange="onBonusChange()">
+          <div class="b-tag">CHOICE A · 추천</div>
+          <div class="b-name">Video Brand Lift</div>
+          <div class="b-meta">CPVC 20원 (수수료 30% 기준) · 영상 소재 보유 광고주</div>
+        </label>
+        <label>
+          <input type="radio" name="bonus" value="da_brand_lift" onchange="onBonusChange()">
+          <div class="b-tag">CHOICE B</div>
+          <div class="b-name">DA Brand Lift</div>
+          <div class="b-meta">CPC 100원(MO) · CPM 500원(PC) · 영상 소재 미보유</div>
+        </label>
+        <label>
+          <input type="radio" name="bonus" value="da_mens_network" onchange="onBonusChange()">
+          <div class="b-tag">CHOICE C · 월드컵</div>
+          <div class="b-name">DA Men's Network</div>
+          <div class="b-meta">CPM 150원 · AOS 노출 한정</div>
+        </label>
+      </div>
+      <div class="field" id="daMoRatioField" style="display:none; margin-top: 12px;">
+        <label>DA Brand Lift — MO / PC 보너스 예산 비율 선택 (광고주 선택)</label>
+        <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center;">
+          <div style="font-size: 11px; font-weight: 700; color: var(--magenta);">MO <span id="daMoRatioLabel">50</span>%</div>
+          <input type="range" id="daMoRatio" min="0" max="100" step="10" value="50" oninput="onDaRatioChange()" style="width: 100%; accent-color: var(--magenta);">
+          <div style="font-size: 11px; font-weight: 700; color: var(--blue);">PC <span id="daPcRatioLabel">50</span>%</div>
+        </div>
+        <div class="hint">MO(CPC) · PC(CPM) 트랙 사이의 보너스 예산 비중을 광고주가 선택할 수 있습니다.</div>
+      </div>
+    </div>
+
+    <!-- Step 7: 오디언스 팩 -->
+    <div class="panel">
+      <h2><span class="step-num">7</span>코어 오디언스 팩 (복수 선택 가능)</h2>
+      <div class="pack-grid" id="packGroup">
+        <label>
+          <input type="checkbox" name="pack" value="pack1" onchange="onPackChange()">
+          <span class="p-name">PACK 01 — 국가대표 응원·실시간 소비</span>
+          <div class="p-desc">경기 시간 폭증층 (TG 360·Lotte·라이브스코어)</div>
+          <div class="p-rec">💡 식음료·통신사·대형 가전·모바일 게임</div>
+        </label>
+        <label>
+          <input type="checkbox" name="pack" value="pack2" onchange="onPackChange()">
+          <span class="p-name">PACK 02 — 여행·해외 액티비티</span>
+          <div class="p-desc">중상위 소득 항공/숙박 예약층 (Loplat·TG 360)</div>
+          <div class="p-rec">💡 항공·여행사·호텔·면세점·카드사</div>
+        </label>
+        <label>
+          <input type="checkbox" name="pack" value="pack3" onchange="onPackChange()">
+          <span class="p-name">PACK 03 — 라이프스타일·트렌드 (MZ)</span>
+          <div class="p-desc">콜라보·한정판 즉반응 MZ (SKP·Lotte·NHN)</div>
+          <div class="p-rec">💡 스포츠·뷰티·패션·럭셔리</div>
+        </label>
+        <label>
+          <input type="checkbox" name="pack" value="pack4" onchange="onPackChange()">
+          <span class="p-name">PACK 04 — 이벤트 관망·가족</span>
+          <div class="p-desc">시즈널 이벤트 다 반응층 (KB·N.DMP·Lotte)</div>
+          <div class="p-rec">💡 대형마트·자동차·보험·통신사·카드</div>
+        </label>
+      </div>
+      <div class="alert good" id="dmpWaiveAlert" style="display:none; font-size: 11px; padding: 9px 11px; border-radius: 6px; margin-top: 10px; border: 1px solid #91D1A5; background: var(--good-soft); color: var(--good); line-height: 1.55;">
+        🎁 <strong>2026 World Cup 패키지 한정 — 단가 할증 무료 혜택 적용</strong><br>
+        본래 DMP 복합 활용 오디언스 팩 선택 시 +20% 단가 할증이 적용되지만, 본 패키지에서는 <strong>무할증</strong>으로 운영됩니다.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ RIGHT: RESULT PANEL ============ -->
+  <div class="result-col">
+    <div class="result" id="resultPanel">
+      <div class="result-head">
+        <div class="ttl">예상 운영 결과</div>
+        <div class="sub" id="resultSub">필수 입력값을 채우면 자동 계산됩니다.</div>
+      </div>
+      <div class="result-body">
+        <div class="info-box" id="resultIntro">
+          <span class="em">필수 입력:</span> 업종 · 캠페인 기간 · 부킹 예산 · 보너스 상품 (오디언스 팩은 선택)
+        </div>
+        <div id="resultDetail"></div>
+        <div class="actions no-capture">
+          <button class="btn secondary" onclick="resetForm()">↺ 초기화</button>
+          <button class="btn primary" id="submitBtn" onclick="openSendModal()" disabled>📨 이 기준으로 제안서 요청하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-bar no-capture">
+  <div>
+    <strong>문의 · 부킹</strong> · 📧 nap_dsp@nasmedia.co.kr · 부킹 마감: 캠페인 라이브 영업일 기준 2일 전<br>
+    <span style="font-size: 10px;">※ 본 시뮬레이터의 단가·예상 수치는 nap dsp 매체상품소개서·MediaMix(2026.02~04) 기준입니다. 실제 운영 환경에 따라 변동될 수 있습니다.</span>
+  </div>
+  <div class="brand">nap dsp</div>
+</div>
+</div><!-- end capture-zone -->
+
+<!-- ============ Send Modal ============ -->
+<div class="modal-bg" id="sendModal">
+  <div class="modal">
+    <h3>제안서 요청 메일 보내기</h3>
+    <p>아래 절차에 따라 캡쳐 이미지와 함께 nap dsp 팀에 메일을 전송하실 수 있습니다.</p>
+    <ol>
+      <li>아래 <strong>화면 캡쳐 다운로드</strong> 버튼을 누르면 시뮬레이션 결과 이미지(PNG)가 자동 다운로드됩니다.</li>
+      <li>이어서 메일 작성 창이 자동으로 열립니다. (시뮬레이션 내용은 본문에 자동 채워집니다.)</li>
+      <li>다운로드된 PNG 파일을 메일 첨부에 끌어다 놓고 보내주세요.</li>
+    </ol>
+    <p style="font-size: 11px; color: var(--sub);">메일 본문에는 광고주·예산·예상 노출·클릭 등 입력값과 계산 결과가 텍스트로 정리되어 들어갑니다.</p>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeSendModal()">취소</button>
+      <button class="btn primary" onclick="captureAndSend()">📥 캡쳐 다운로드 + 메일 작성</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA MODEL
+// ============================================================
+const DATA = {
+  pricing: {
+    'kakao_napdsp': {
+      type: 'CPM', label: 'Kakao x nap dsp', category: '부킹',
+      sizes: '1029×258 비즈보드 · 320×100 · 320×50 · NativeAD',
+      media: '카카오톡·다음·티맵·키즈노트·에브리타임 등',
+      avgCTR: 0.0003,
+      tiers: [
+        { max: 30000000,  unit: { 30: 1500, 20: 1364, 10: 1250, 0: 1154 } },
+        { max: 50000000,  unit: { 30: 1350, 20: 1227, 10: 1125, 0: 1038 } },
+        { max: Infinity,  unit: { 30: 1200, 20: 1091, 10: 1000, 0:  923 } },
+      ]
+    },
+    'video_brand_lift': {
+      type: 'CPVC', label: 'Video Brand Lift', category: '보너스',
+      sizes: '5~240초 Video (MO·PC)',
+      media: '언론사·OK캐시백·SOOP·CJ ONE·T 멤버십',
+      useVideoCTR: true,
+      tiers: [
+        { max: Infinity,  unit: { 30: 20, 20: 18, 10: 17, 0: 15 } },
+      ],
+    },
+    'da_brand_lift_mo': {
+      type: 'CPC', label: 'DA Brand Lift (MO)', category: '보너스 — MO',
+      sizes: '320×50 · 320×100 · 1029×258(비즈보드) · 300×250 · 320×480 · NativeAD',
+      media: '다음·T 멤버십·KB PAY·CJ ONE·캐치테이블·캐시워크',
+      useIndustryCTR: true,
+      tiers: [
+        { max: 30000000,  unit: { 30: 100, 20: 91, 10: 83, 0: 77 } },
+        { max: 50000000,  unit: { 30:  97, 20: 88, 10: 81, 0: 75 } },
+        { max: Infinity,  unit: { 30:  95, 20: 86, 10: 79, 0: 73 } },
+      ],
+    },
+    'da_brand_lift_pc': {
+      type: 'CPM', label: 'DA Brand Lift (PC)', category: '보너스 — PC',
+      sizes: '320×50 · 300×250 · 320×480 · 970×90 · 728×90 · 160×600 외',
+      media: '언론사·MLB PARK·디시인사이드',
+      avgCTR: 0.008,
+      tiers: [
+        { max: 30000000,  unit: { 30: 500, 20: 455, 10: 417, 0: 385 } },
+        { max: 50000000,  unit: { 30: 475, 20: 432, 10: 396, 0: 365 } },
+        { max: Infinity,  unit: { 30: 450, 20: 409, 10: 375, 0: 346 } },
+      ],
+    },
+    'da_mens_network': {
+      type: 'CPM', label: "DA Men's Network", category: '보너스',
+      sizes: '320×50 · 320×100 · 300×250',
+      media: '디시인사이드·에펨코리아·MLB PARK·인벤·OP.GG (AOS 한정)',
+      avgCTR: 0.0003,
+      tiers: [
+        { max: Infinity,  unit: { 30: 150, 20: 136, 10: 125, 0: 115 } },
+      ],
+    },
+  },
+
+  // 업종별 평균 CTR (DA 16종)
+  industryCTR: {
+    '가전': 0.03970, '게임': 0.03435, '관광/레저/항공': 0.03339, '교육': 0.03534,
+    '금융': 0.04314, '단체/관공서': 0.03574, '문화/예술': 0.03128, '방송/통신서비스': 0.02469,
+    '생활용품': 0.03531, '쇼핑몰': 0.03394, '수송': 0.03824, '식음료': 0.03948,
+    '의료/건강': 0.03630, '주택/가구': 0.04623, '패션/화장품': 0.04695, '기타': 0.03827,
+  },
+
+  // Video 업종별 CTR/VTR
+  videoIndustry: {
+    '가전': { ctr: 0.013, vtr: 0.680 }, '게임': { ctr: 0.01875, vtr: 0.7925 },
+    '관광/레저/항공': { ctr: 0.017, vtr: 0.796 }, '교육': { ctr: 0.011, vtr: 0.862 },
+    '금융': { ctr: 0.027, vtr: 0.755 }, '단체/관공서': { ctr: 0.015, vtr: 0.849 },
+    '문화/예술': { ctr: 0.02333, vtr: 0.824 }, '방송/통신서비스': { ctr: 0.0105, vtr: 0.829 },
+    '생활용품': { ctr: 0.034, vtr: 0.656 }, '쇼핑몰': { ctr: 0.02, vtr: 0.818 },
+    '수송': { ctr: 0.029, vtr: 0.823 }, '식음료': { ctr: 0.01286, vtr: 0.803 },
+    '의료/건강': { ctr: 0.012, vtr: 0.8652 }, '주택/가구': { ctr: 0.0148, vtr: 0.7566 },
+    '패션/화장품': { ctr: 0.017, vtr: 0.8445 }, '기타': { ctr: 0.018, vtr: 0.806 },
+  },
+
+  // IAB 카테고리 26종 — status: OK/PARTIAL/BLOCKED, industry: 엑셀 16업종 매핑
+  iab: [
+    { code: 'IAB1', name: 'Arts & Entertainment (영화·음악·예술)', status: 'OK', industry: '문화/예술' },
+    { code: 'IAB2', name: 'Automotive (자동차)', status: 'PARTIAL', industry: '수송', note: 'IAB2-5(Customs/4x4) 채팅·숏폼 ❌' },
+    { code: 'IAB3', name: 'Business (마케팅·경영·창업)', status: 'OK', industry: '기타' },
+    { code: 'IAB4', name: 'Careers (채용·이력서·직업교육)', status: 'OK', industry: '교육' },
+    { code: 'IAB5', name: 'Education (학교·유학·언어학습)', status: 'OK', industry: '교육' },
+    { code: 'IAB6', name: 'Family & Parenting (육아·가족)', status: 'OK', industry: '생활용품' },
+    { code: 'IAB7', name: 'Health & Fitness (질병·운동·약물)', status: 'BLOCKED', industry: '의료/건강', note: '전 지면 노출 불가' },
+    { code: 'IAB8', name: 'Food & Drink', status: 'PARTIAL', industry: '식음료', note: 'IAB8-5(요리)·IAB8-18(주류)는 숏폼·네이티브만 가능' },
+    { code: 'IAB9', name: 'Hobbies (게임·취미)', status: 'PARTIAL', industry: '게임', note: 'IAB9-7(카드)·9-9(비디오게임) 전 지면 ❌, 9-25/30(매직·퍼즐) 숏폼 이하만' },
+    { code: 'IAB10', name: 'Home & Garden (인테리어·가구·원예)', status: 'OK', industry: '주택/가구' },
+    { code: 'IAB11', name: 'Personal Finance', status: 'PARTIAL', industry: '금융', note: 'IAB11-3(대출)·11-4(보험) 네이티브만 가능' },
+    { code: 'IAB12', name: 'News (국내외 뉴스·날씨)', status: 'OK', industry: '방송/통신서비스' },
+    { code: 'IAB13', name: 'Personal Pleasures (성인·복권·운세)', status: 'BLOCKED', industry: '기타', note: '전 지면 노출 불가' },
+    { code: 'IAB14', name: 'Society', status: 'PARTIAL', industry: '단체/관공서', note: 'IAB14-1(법률)·14-3(정치) 전 지면 ❌ / 14-5(사회이슈) 네이티브 ❌' },
+    { code: 'IAB15', name: 'Science (과학 일반)', status: 'BLOCKED', industry: '기타', note: '전 지면 노출 불가' },
+    { code: 'IAB16', name: 'Pets (반려동물)', status: 'PARTIAL', industry: '기타', note: '채팅리스트 ❌, 그 외 가능' },
+    { code: 'IAB17', name: 'Sports (축구·야구·골프 등) ⚽ 월드컵 핵심', status: 'OK', industry: '관광/레저/항공' },
+    { code: 'IAB18', name: 'Style & Fashion', status: 'PARTIAL', industry: '패션/화장품', note: 'IAB18-2(의류) 전 지면 ❌ — 그 외 가능' },
+    { code: 'IAB19', name: 'Technology (가전·IT기기·소프트웨어)', status: 'OK', industry: '가전' },
+    { code: 'IAB20', name: 'Travel (호텔·항공권·렌터카) ✈️', status: 'OK', industry: '관광/레저/항공' },
+    { code: 'IAB21', name: 'Real Estate (아파트·부동산)', status: 'PARTIAL', industry: '주택/가구', note: '비즈보드만 가능' },
+    { code: 'IAB22', name: 'Shopping (온라인 쇼핑·할인·쿠폰) 🛒', status: 'OK', industry: '쇼핑몰' },
+    { code: 'IAB23', name: 'Religion (종교·점술·영성)', status: 'BLOCKED', industry: '기타', note: '전 지면 노출 불가' },
+    { code: 'IAB24', name: 'Wealth Mgmt (주식·투자)', status: 'OK', industry: '금융' },
+    { code: 'IAB25', name: 'Business (산업 — 건설·농업·광고)', status: 'BLOCKED', industry: '기타', note: '전 지면 노출 불가' },
+    { code: 'IAB26', name: 'Sensitive (도박·민감 콘텐츠)', status: 'BLOCKED', industry: '기타', note: '전 지면 노출 불가' },
+  ],
+
+  // 오디언스 팩 4종
+  packs: [
+    { id: 'pack1', name: '국가대표 응원·실시간 소비' },
+    { id: 'pack2', name: '여행·해외 액티비티' },
+    { id: 'pack3', name: '라이프스타일·트렌드(MZ)' },
+    { id: 'pack4', name: '이벤트 관망·가족' },
+  ],
+};
+
+// ============================================================
+// INIT
+// ============================================================
+function initIabSelect() {
+  const sel = document.getElementById('iabSelect');
+  sel.innerHTML = '<option value="">— 선택 —</option>' +
+    DATA.iab.map(i => {
+      const lbl = i.code + ' — ' + i.name;
+      const dis = (i.status === 'BLOCKED') ? ' disabled' : '';
+      const mark = (i.status === 'BLOCKED') ? ' [불가]' : (i.status === 'PARTIAL') ? ' [부분 제한]' : '';
+      return `<option value="${i.code}"${dis}>${lbl}${mark}</option>`;
+    }).join('');
+}
+
+function onIabChange() {
+  const code = document.getElementById('iabSelect').value;
+  const ent = DATA.iab.find(i => i.code === code);
+  const alertEl = document.getElementById('iabAlert');
+  if (!ent) { alertEl.innerHTML = ''; recalc(); return; }
+  if (ent.status === 'PARTIAL') {
+    alertEl.innerHTML = `<div class="alert warn">⚠ <strong>제한 업종</strong> — ${ent.note || '일부 지면 노출 제한'} (캠페인 사전 협의 필요)</div>`;
+  } else if (ent.status === 'OK') {
+    alertEl.innerHTML = `<div class="alert good">✅ 전 지면 노출 가능 업종</div>`;
+  } else {
+    alertEl.innerHTML = `<div class="alert bad">❌ 전 지면 노출 불가 업종 — 본 패키지 진행 불가</div>`;
+  }
+  recalc();
+}
+
+function onAgencyChange() {
+  const sel = document.querySelector('input[name="agency"]:checked').value;
+  document.getElementById('agencyNameField').style.display = sel === 'yes' ? 'block' : 'none';
+  recalc();
+}
+function onRepChange() {
+  const sel = document.querySelector('input[name="rep"]:checked').value;
+  document.getElementById('repNameField').style.display = sel === 'yes' ? 'block' : 'none';
+  recalc();
+}
+function onBonusChange() {
+  const v = (document.querySelector('input[name="bonus"]:checked')||{}).value;
+  document.getElementById('daMoRatioField').style.display = (v === 'da_brand_lift') ? 'block' : 'none';
+  recalc();
+}
+function onDaRatioChange() {
+  const r = parseInt(document.getElementById('daMoRatio').value);
+  document.getElementById('daMoRatioLabel').textContent = r;
+  document.getElementById('daPcRatioLabel').textContent = 100 - r;
+  recalc();
+}
+function updateDmpAlert() {
+  const hasPack = document.querySelectorAll('input[name="pack"]:checked').length > 0;
+  document.getElementById('dmpWaiveAlert').style.display = hasPack ? 'block' : 'none';
+}
+function onPackChange() {
+  updateDmpAlert();
+  recalc();
+}
+
+// ============================================================
+// CALCULATION
+// ============================================================
+function getInputs() {
+  const iabCode = document.getElementById('iabSelect').value;
+  const iab = DATA.iab.find(i => i.code === iabCode);
+  const agency = (document.querySelector('input[name="agency"]:checked')||{}).value || 'no';
+  const rep = (document.querySelector('input[name="rep"]:checked')||{}).value || 'no';
+  const ds = document.getElementById('dateStart').value;
+  const de = document.getElementById('dateEnd').value;
+  let days = 0;
+  if (ds && de) {
+    days = Math.max(1, Math.round((new Date(de) - new Date(ds)) / 86400000) + 1);
+  }
+  const budget = parseFloat(document.getElementById('budget').value || '0');
+  const bonus = (document.querySelector('input[name="bonus"]:checked')||{}).value || '';
+  const packs = Array.from(document.querySelectorAll('input[name="pack"]:checked')).map(e=>e.value);
+  const advName = document.getElementById('advName').value;
+  const campName = document.getElementById('campName').value;
+  const agencyName = document.getElementById('agencyName').value;
+  const repName = document.getElementById('repName').value;
+  const daMoRatio = parseInt(document.getElementById('daMoRatio').value || '50');
+  return { iab, agency, rep, agencyName, repName, days, budget, bonus, packs, advName, campName, daMoRatio };
+}
+
+function getCommission(agency, rep) {
+  return (agency === 'yes' ? 0.20 : 0) + (rep === 'yes' ? 0.10 : 0);
+}
+
+// 보너스 비율 (1개월 환산 예산 기준)
+function getBonusRate(monthlyBudget) {
+  if (monthlyBudget < 5_000_000) return 0;
+  if (monthlyBudget < 30_000_000) return 0.03;
+  if (monthlyBudget < 50_000_000) return 0.05;
+  return 0.10;
+}
+
+// 단가 lookup
+function lookupUnit(productKey, monthlyBudget, commissionRate) {
+  const p = DATA.pricing[productKey];
+  const tier = p.tiers.find(t => monthlyBudget < t.max) || p.tiers[p.tiers.length - 1];
+  const ratePct = Math.round(commissionRate * 100);
+  return tier.unit[ratePct] !== undefined ? tier.unit[ratePct] : tier.unit[30];
+}
+
+// 업종 CTR (DA)
+function getCTR(productKey, industry) {
+  const p = DATA.pricing[productKey];
+  if (p.useIndustryCTR && DATA.industryCTR[industry]) return DATA.industryCTR[industry];
+  if (p.useVideoCTR && DATA.videoIndustry[industry]) return DATA.videoIndustry[industry].ctr;
+  return p.avgCTR || 0;
+}
+function getVTR(productKey, industry) {
+  const p = DATA.pricing[productKey];
+  if (p.useVideoCTR && DATA.videoIndustry[industry]) return DATA.videoIndustry[industry].vtr;
+  return 0;
+}
+
+// 상품별 계산 — 단가표 lookup (Gross 단가)
+function calcProduct(productKey, monthlyBudget, allocBudget, industry, hasDmpTargeting, commissionRate) {
+  const p = DATA.pricing[productKey];
+  const guaranteedUnit = lookupUnit(productKey, monthlyBudget, commissionRate);
+  const result = {
+    label: p.label, type: p.type, category: p.category,
+    sizes: p.sizes, media: p.media,
+    guaranteedUnit, allocBudget,
+    waivedPremium: hasDmpTargeting,
+  };
+  if (p.type === 'CPM') {
+    // 보장 노출량 = budget / guaranteedUnit × 1000
+    result.impression = Math.floor(allocBudget / guaranteedUnit * 1000);
+    const ctr = getCTR(productKey, industry);
+    result.ctr = ctr;
+    result.click = Math.floor(result.impression * ctr);
+    result.cpc = result.click > 0 ? Math.round(allocBudget / result.click) : 0;
+  } else if (p.type === 'CPC') {
+    // 보장 클릭수 = budget / guaranteedUnit
+    result.click = Math.floor(allocBudget / guaranteedUnit);
+    const ctr = getCTR(productKey, industry);
+    result.ctr = ctr;
+    result.impression = ctr > 0 ? Math.floor(result.click / ctr) : 0;
+    result.cpc = guaranteedUnit;
+  } else if (p.type === 'CPVC') {
+    // 보장 조회수 (Video Complete) = budget / guaranteedUnit
+    result.view = Math.floor(allocBudget / guaranteedUnit);
+    const vtr = getVTR(productKey, industry);
+    const ctr = getCTR(productKey, industry);
+    result.vtr = vtr;
+    result.ctr = ctr;
+    // 보장 노출량 = 보장조회 / VTR
+    result.impression = vtr > 0 ? Math.floor(result.view / vtr) : 0;
+    result.click = Math.floor(result.impression * ctr);
+    result.cpv = guaranteedUnit;
+  }
+  return result;
+}
+
+// 메인 계산
+function calcAll() {
+  const inp = getInputs();
+  if (!inp.iab || inp.iab.status === 'BLOCKED') return null;
+  if (!inp.days || !inp.budget || inp.budget < 5_000_000) return null;
+  if (!inp.bonus) return null;
+  const industry = inp.iab.industry;
+  const commissionRate = getCommission(inp.agency, inp.rep);
+  const monthlyBudget = inp.budget * (31 / inp.days);     // 부킹 예산 1개월 환산
+  const bonusRate = getBonusRate(monthlyBudget);
+  const bonusAllocBudget = inp.budget * bonusRate;        // 보너스 자체 예산 (실 기간)
+  const bonusMonthlyBudget = monthlyBudget * bonusRate;   // 보너스 자체 예산 1개월 환산
+  const hasDmp = inp.packs.length > 0;
+  const out = {
+    inp, industry, commissionRate, monthlyBudget, bonusMonthlyBudget, bonusRate, bonusAllocBudget, hasDmp,
+    // 부킹 상품: 부킹 자체 1개월 환산 기준으로 단가 lookup
+    booking: calcProduct('kakao_napdsp', monthlyBudget, inp.budget, industry, hasDmp, commissionRate),
+    bonuses: [],
+  };
+  // 보너스 상품 적용 단가 기준
+  const BONUS_COMMISSION = 0.30;
+  if (inp.bonus === 'video_brand_lift') {
+    out.bonuses.push(calcProduct('video_brand_lift', bonusMonthlyBudget, bonusAllocBudget, industry, hasDmp, BONUS_COMMISSION));
+  } else if (inp.bonus === 'da_brand_lift') {
+    const moRate = inp.daMoRatio / 100;
+    const moBudget = bonusAllocBudget * moRate;
+    const pcBudget = bonusAllocBudget * (1 - moRate);
+    const moMonthly = bonusMonthlyBudget * moRate;
+    const pcMonthly = bonusMonthlyBudget * (1 - moRate);
+    if (moBudget > 0) out.bonuses.push(calcProduct('da_brand_lift_mo', moMonthly, moBudget, industry, hasDmp, BONUS_COMMISSION));
+    if (pcBudget > 0) out.bonuses.push(calcProduct('da_brand_lift_pc', pcMonthly, pcBudget, industry, hasDmp, BONUS_COMMISSION));
+    out.daSplitNote = `※ DA Brand Lift 보너스 예산 배분: MO ${inp.daMoRatio}% · PC ${100 - inp.daMoRatio}% (광고주 선택) — 각 트랙 자체 1개월 환산 예산 기준으로 단가 구간 적용`;
+  } else if (inp.bonus === 'da_mens_network') {
+    out.bonuses.push(calcProduct('da_mens_network', bonusMonthlyBudget, bonusAllocBudget, industry, hasDmp, BONUS_COMMISSION));
+  }
+  return out;
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function fmt(n) { return n.toLocaleString('ko-KR'); }
+function fmtMoney(n) { return Math.round(n).toLocaleString('ko-KR') + '원'; }
+function fmtPct(n) { return (n * 100).toFixed(2) + '%'; }
+
+function renderProductCard(r, isBooking) {
+  let metrics = '';
+  if (r.type === 'CPM') {
+    metrics = `
+      <div class="pc-cell"><div class="lbl">보장 노출</div><div class="val">${fmt(r.impression)}회</div></div>
+      <div class="pc-cell"><div class="lbl">예상 클릭</div><div class="val accent">${fmt(r.click)}회</div></div>
+      <div class="pc-cell"><div class="lbl">평균 CTR</div><div class="val" style="font-size:12px;">${fmtPct(r.ctr)}</div></div>
+      <div class="pc-cell"><div class="lbl">예상 CPC</div><div class="val" style="font-size:12px;">${fmtMoney(r.cpc)}</div></div>`;
+  } else if (r.type === 'CPC') {
+    metrics = `
+      <div class="pc-cell"><div class="lbl">보장 클릭</div><div class="val accent">${fmt(r.click)}회</div></div>
+      <div class="pc-cell"><div class="lbl">예상 노출</div><div class="val">${fmt(r.impression)}회</div></div>
+      <div class="pc-cell"><div class="lbl">평균 CTR</div><div class="val" style="font-size:12px;">${fmtPct(r.ctr)}</div></div>
+      <div class="pc-cell"><div class="lbl">CPC 단가</div><div class="val" style="font-size:12px;">${fmtMoney(r.cpc)}</div></div>`;
+  } else if (r.type === 'CPVC') {
+    metrics = `
+      <div class="pc-cell"><div class="lbl">보장 조회(Complete)</div><div class="val accent">${fmt(r.view)}회</div></div>
+      <div class="pc-cell"><div class="lbl">예상 노출</div><div class="val">${fmt(r.impression)}회</div></div>
+      <div class="pc-cell"><div class="lbl">평균 VTR</div><div class="val" style="font-size:12px;">${fmtPct(r.vtr)}</div></div>
+      <div class="pc-cell"><div class="lbl">CPV 단가</div><div class="val" style="font-size:12px;">${fmtMoney(r.cpv)}</div></div>
+      <div class="pc-cell"><div class="lbl">평균 CTR</div><div class="val" style="font-size:12px;">${fmtPct(r.ctr)}</div></div>
+      <div class="pc-cell"><div class="lbl">예상 클릭</div><div class="val" style="font-size:12px;">${fmt(r.click)}회</div></div>`;
+  }
+  const waiveBadge = r.waivedPremium ? ' · <span style="color:var(--good); font-weight:800; font-size:11px;">🎁 DMP 할증 무할증 적용</span>' : '';
+  return `
+    <div class="product-card ${isBooking ? 'booking' : 'bonus'}">
+      <span class="pc-tag">${isBooking ? '부킹 상품' : r.category}</span>
+      <div class="pc-name">${r.label}</div>
+      <div class="pc-summary">보장 ${r.type} <strong>${fmtMoney(r.guaranteedUnit)}</strong>${waiveBadge} · 예산 배분 <strong>${fmtMoney(r.allocBudget)}</strong></div>
+      <div class="pc-grid">${metrics}</div>
+      <div class="pc-note">📺 ${r.sizes}<br>📡 ${r.media}</div>
+    </div>`;
+}
+
+function render() {
+  const out = calcAll();
+  const inp = getInputs();
+  const sub = document.getElementById('resultSub');
+  const intro = document.getElementById('resultIntro');
+  const detail = document.getElementById('resultDetail');
+  const btn = document.getElementById('submitBtn');
+
+  if (!out) {
+    btn.disabled = true;
+    let missing = [];
+    if (!inp.iab) missing.push('업종');
+    else if (inp.iab.status === 'BLOCKED') missing.push('업종 (현 선택: 불가 업종)');
+    if (!inp.days) missing.push('캠페인 기간');
+    if (!inp.budget || inp.budget < 5_000_000) missing.push('예산 (최소 500만원)');
+    if (!inp.bonus) missing.push('보너스 상품');
+    sub.textContent = '필수 입력값을 채우면 자동 계산됩니다.';
+    intro.innerHTML = `<span class="em">입력 필요:</span> ${missing.join(' · ')}`;
+    detail.innerHTML = '';
+    return;
+  }
+
+  btn.disabled = false;
+  sub.textContent = `${inp.advName || '광고주'} · ${inp.iab.code} · ${inp.days}일 · ${fmtMoney(inp.budget)}`;
+  const rateInt = Math.round(out.commissionRate * 100);
+  const commLabel = rateInt === 30 ? '대행사+렙사 (30%)' : rateInt === 20 ? '대행사만 (20%)' : rateInt === 10 ? '렙사만 (10%)' : '직거래 (0%)';
+  intro.innerHTML = `
+    <div class="summary-row"><div class="l">광고주 / 캠페인</div><div class="v">${inp.advName || '-'} / ${inp.campName || '-'}</div></div>
+    <div class="summary-row"><div class="l">대행사 · 렙사</div><div class="v">${inp.agencyName||(inp.agency==='yes'?'(이름 미입력)':'없음')} · ${inp.repName||(inp.rep==='yes'?'(이름 미입력)':'없음')}</div></div>
+    <div class="summary-row"><div class="l">적용 수수료율 (단가표 기준)</div><div class="v">${commLabel}</div></div>
+    <div class="summary-row"><div class="l">캠페인 기간</div><div class="v">${inp.days}일 (${inp.days===31?'1개월':'1개월 환산 예산: '+fmtMoney(out.monthlyBudget)})</div></div>
+    <div class="summary-row"><div class="l">업종 매핑</div><div class="v">${inp.iab.code} → ${out.industry}</div></div>
+    <div class="summary-row"><div class="l">오디언스 팩 (DMP)</div><div class="v">${inp.packs.length>0 ? inp.packs.map(p=>DATA.packs.find(x=>x.id===p).name).join(' · ') + ' 🎁 무할증' : '미적용'}</div></div>
+    ${inp.bonus === 'da_brand_lift' ? `<div class="summary-row"><div class="l">DA Brand Lift 비율</div><div class="v">MO ${inp.daMoRatio}% · PC ${100-inp.daMoRatio}%</div></div>` : ''}
+    <div class="summary-row"><div class="l">보너스 비율 (1개월 환산 ${fmtMoney(out.monthlyBudget)} 기준)</div><div class="v big">+${(out.bonusRate*100).toFixed(0)}%</div></div>
+    <div class="summary-row"><div class="l">보너스 추가 노출 예산 (실 기간)</div><div class="v">${fmtMoney(out.bonusAllocBudget)}</div></div>
+    <div class="summary-row"><div class="l">보너스 1개월 환산 예산 (단가 구간 lookup 기준)</div><div class="v">${fmtMoney(out.bonusMonthlyBudget)}</div></div>
+  `;
+  let html = renderProductCard(out.booking, true);
+  out.bonuses.forEach(b => html += renderProductCard(b, false));
+  if (out.daSplitNote) html += `<div class="pc-note" style="margin-top:8px; padding: 8px 10px; background: var(--warn-soft); border-radius: 6px;">${out.daSplitNote}</div>`;
+  // 합계
+  const totImp = out.booking.impression + out.bonuses.reduce((s,b)=>s+b.impression, 0);
+  const totClick = out.booking.click + out.bonuses.reduce((s,b)=>s+b.click, 0);
+  html += `
+    <div class="product-card" style="border-color: var(--cyan); background: var(--accent-soft); margin-top: 14px;">
+      <span class="pc-tag" style="background: var(--cyan); color: white;">합계</span>
+      <div class="pc-name">전체 캠페인 합산</div>
+      <div class="pc-grid">
+        <div class="pc-cell"><div class="lbl">총 노출 (부킹+보너스)</div><div class="val">${fmt(totImp)}회</div></div>
+        <div class="pc-cell"><div class="lbl">총 예상 클릭</div><div class="val accent">${fmt(totClick)}회</div></div>
+        <div class="pc-cell"><div class="lbl">총 집행 예산 (VAT 별도)</div><div class="val" style="font-size:12px;">${fmtMoney(inp.budget)}</div></div>
+        <div class="pc-cell"><div class="lbl">실효 단가 (1클릭당)</div><div class="val" style="font-size:12px;">${totClick>0 ? fmtMoney(inp.budget/totClick) : '-'}</div></div>
+      </div>
+    </div>
+    <div class="pc-note" style="margin-top: 8px; font-size: 10px;">
+      ※ 본 단가·예상 수치는 nap dsp 매체상품소개서(2026.03) 및 MediaMix 시트(2026.02~04)의 단가표·업종 평균 CTR·VTR을 기준으로 산출됩니다. 트래픽 추이 및 매체 인벤토리 상황에 따라 변동될 수 있으며, 보장되지 않습니다.<br>
+      ${inp.iab.note ? '※ 선택 업종 주의사항: ' + inp.iab.note : ''}
+    </div>
+  `;
+  detail.innerHTML = html;
+}
+
+function recalc() { render(); }
+
+function resetForm() {
+  document.querySelectorAll('input[type="text"], input[type="number"]').forEach(e => e.value = '');
+  document.getElementById('dateStart').value = '';
+  document.getElementById('dateEnd').value = '';
+  document.getElementById('iabSelect').value = '';
+  document.querySelector('input[name="agency"][value="no"]').checked = true;
+  document.querySelector('input[name="rep"][value="no"]').checked = true;
+  document.querySelectorAll('input[name="bonus"]').forEach(e => e.checked = false);
+  document.querySelectorAll('input[name="pack"]').forEach(e => e.checked = false);
+  document.getElementById('agencyNameField').style.display = 'none';
+  document.getElementById('repNameField').style.display = 'none';
+  document.getElementById('daMoRatioField').style.display = 'none';
+  document.getElementById('daMoRatio').value = 50;
+  document.getElementById('daMoRatioLabel').textContent = '50';
+  document.getElementById('daPcRatioLabel').textContent = '50';
+  document.getElementById('dmpWaiveAlert').style.display = 'none';
+  document.getElementById('iabAlert').innerHTML = '';
+  recalc();
+}
+
+// ============================================================
+// EMAIL CAPTURE
+// ============================================================
+function openSendModal() { document.getElementById('sendModal').classList.add('show'); }
+function closeSendModal() { document.getElementById('sendModal').classList.remove('show'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+async function captureAndSend() {
+  closeSendModal();
+  showToast('화면 캡쳐 준비 중…');
+  const captureZone = document.getElementById('capture-zone');
+  captureZone.classList.add('capturing');
+  try {
+    const canvas = await html2canvas(captureZone, {
+      backgroundColor: '#F4F6FB', scale: 2, useCORS: true, logging: false
+    });
+    captureZone.classList.remove('capturing');
+    // PNG 다운로드
+    const dataUrl = canvas.toDataURL('image/png');
+    const inp = getInputs();
+    const fname = `worldcup_simulation_${(inp.advName||'campaign').replace(/[^\w가-힣]/g,'_')}_${new Date().toISOString().slice(0,10)}.png`;
+    const a = document.createElement('a');
+    a.href = dataUrl; a.download = fname;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    showToast('캡쳐 다운로드 완료 → 메일창 엽니다');
+    // mailto 작성
+    setTimeout(() => openMailto(fname), 600);
+  } catch(e) {
+    captureZone.classList.remove('capturing');
+    console.error(e);
+    showToast('캡쳐 실패: ' + e.message);
+  }
+}
+
+function openMailto(attachedFilename) {
+  const out = calcAll();
+  const inp = getInputs();
+  if (!out) {
+    window.location.href = 'mailto:nap_dsp@nasmedia.co.kr?subject=' + encodeURIComponent('2026 World Cup 패키지 제안 요청');
+    return;
+  }
+  const subject = `[2026 World Cup 패키지 제안 요청] ${inp.advName || '광고주'} · ${inp.campName || '캠페인'}`;
+  const lines = [];
+  lines.push('안녕하세요, nap dsp 팀.');
+  lines.push('아래 조건으로 2026 World Cup 패키지 제안서 요청드립니다.');
+  lines.push('');
+  lines.push('━━━━━━━━━━━━━━━━━━━━');
+  lines.push('■ 광고주 정보');
+  lines.push('  · 광고주: ' + (inp.advName || '-'));
+  lines.push('  · 캠페인: ' + (inp.campName || '-'));
+  lines.push('  · 업종 (IAB): ' + inp.iab.code + ' ' + inp.iab.name);
+  lines.push('  · 업종 (매핑): ' + out.industry);
+  if (inp.iab.note) lines.push('  · 업종 주의사항: ' + inp.iab.note);
+  lines.push('');
+  lines.push('■ 대행사 / 렙사');
+  lines.push('  · 대행사: ' + (inp.agency === 'yes' ? (inp.agencyName || '(이름 미입력)') + ' (+20%)' : '없음'));
+  lines.push('  · 렙사: ' + (inp.rep === 'yes' ? (inp.repName || '(이름 미입력)') + ' (+10%)' : '없음'));
+  lines.push('  · 적용 수수료율 (단가표 기준): ' + (out.commissionRate*100).toFixed(0) + '%');
+  lines.push('');
+  lines.push('■ 캠페인 기간 / 예산');
+  lines.push('  · 기간: ' + inp.days + '일');
+  lines.push('  · 부킹 예산 (VAT 별도): ' + fmtMoney(inp.budget));
+  lines.push('  · 1개월 환산 예산: ' + fmtMoney(out.monthlyBudget));
+  lines.push('  · 보너스 비율: +' + (out.bonusRate*100).toFixed(0) + '%');
+  lines.push('  · 보너스 추가 노출 예산 (실 기간): ' + fmtMoney(out.bonusAllocBudget));
+  lines.push('  · 보너스 1개월 환산 예산 (단가 구간 기준): ' + fmtMoney(out.bonusMonthlyBudget));
+  lines.push('');
+  lines.push('■ 보너스 상품 / 오디언스 팩');
+  const bonusLabel = {
+    'video_brand_lift': 'Video Brand Lift',
+    'da_brand_lift': `DA Brand Lift (MO ${inp.daMoRatio}% / PC ${100-inp.daMoRatio}%)`,
+    'da_mens_network': "DA Men's Network"
+  }[inp.bonus] || '-';
+  lines.push('  · 보너스 상품: ' + bonusLabel);
+  lines.push('  · 오디언스 팩: ' + (inp.packs.length>0 ? inp.packs.map(p=>DATA.packs.find(x=>x.id===p).name).join(', ') + ' (🎁 본 패키지 한정 단가 할증 무할증 적용)' : '미적용'));
+  lines.push('');
+  lines.push('━━━━━━━━━━━━━━━━━━━━');
+  lines.push('■ 예상 수치');
+  const renderLine = (r, prefix) => {
+    if (r.type === 'CPM') return `  · ${prefix}${r.label}: 보장노출 ${fmt(r.impression)}회 / 예상클릭 ${fmt(r.click)}회 / CTR ${fmtPct(r.ctr)} / CPC ${fmtMoney(r.cpc)} / 보장 ${r.type} ${fmtMoney(r.guaranteedUnit)}`;
+    if (r.type === 'CPC') return `  · ${prefix}${r.label}: 보장클릭 ${fmt(r.click)}회 / 예상노출 ${fmt(r.impression)}회 / CTR ${fmtPct(r.ctr)} / 보장 ${r.type} ${fmtMoney(r.cpc)}`;
+    if (r.type === 'CPVC') return `  · ${prefix}${r.label}: 보장조회 ${fmt(r.view)}회 / 예상노출 ${fmt(r.impression)}회 / VTR ${fmtPct(r.vtr)} / 보장 CPV ${fmtMoney(r.cpv)}`;
+  };
+  lines.push(renderLine(out.booking, '[부킹] '));
+  out.bonuses.forEach(b => lines.push(renderLine(b, '[보너스] ')));
+  const totImp = out.booking.impression + out.bonuses.reduce((s,b)=>s+b.impression, 0);
+  const totClick = out.booking.click + out.bonuses.reduce((s,b)=>s+b.click, 0);
+  lines.push('  · [합계] 총 노출 ' + fmt(totImp) + '회 / 총 예상 클릭 ' + fmt(totClick) + '회');
+  lines.push('');
+  lines.push('━━━━━━━━━━━━━━━━━━━━');
+  lines.push('첨부: ' + (attachedFilename || '시뮬레이션 캡쳐 이미지') + ' (다운로드된 PNG를 메일 첨부에 추가해 주세요)');
+  lines.push('');
+  lines.push('감사합니다.');
+  const body = encodeURIComponent(lines.join('\n'));
+  window.location.href = 'mailto:nap_dsp@nasmedia.co.kr?subject=' + encodeURIComponent(subject) + '&body=' + body;
+}
+
+// ============================================================
+// BOOT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  initIabSelect();
+  recalc();
+});
+</script>
+</body>
+</html>

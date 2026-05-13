@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>nap dsp 2026 World Cup 패키지 제안서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* FIFA World Cup 2026 brand palette */
+    --bg: #F4F6FB;
+    --paper: #FFFFFF;
+    --line: #DDE3EE;
+    --ink: #020F2A;            /* FIFA midnight */
+    --sub: #5A6480;
+    --navy: #020F2A;
+    --navy-2: #0A1A3D;
+    --blue: #326295;
+    --cyan: #00B5E2;           /* host city cyan */
+    --magenta: #E50087;        /* host city magenta */
+    --yellow: #FFD100;         /* host city yellow */
+    --green: #00A859;          /* host city green */
+    --orange: #FF7A00;
+    --accent-soft: #E8F4FB;
+    --magenta-soft: #FFE6F1;
+    --good: #008F4C;
+    --good-soft: #E1F4EA;
+    --bad: #D72638;
+    --bad-soft: #FCE6E8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Poppins", "Noto Sans KR", "맑은 고딕", "Malgun Gothic", system-ui, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    line-break: strict;
+  }
+  .page {
+    width: 794px;
+    min-height: 1123px;
+    margin: 24px auto;
+    background: var(--paper);
+    padding: 30px 36px 24px;
+    box-shadow: 0 4px 24px rgba(2, 15, 42, 0.10);
+    position: relative;
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Decorative top stripe — FIFA host-city multi-color */
+  .page::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--cyan) 0%, var(--magenta) 33%, var(--yellow) 66%, var(--green) 100%);
+  }
+
+  /* ===== HERO ===== */
+  .hero-wc {
+    position: relative;
+    margin: 6px -36px 14px;
+    padding: 26px 36px 22px;
+    background:
+      radial-gradient(ellipse 600px 200px at 90% 30%, rgba(229,0,135,0.30), transparent 60%),
+      radial-gradient(ellipse 500px 180px at 10% 80%, rgba(0,181,226,0.30), transparent 60%),
+      linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, #142A5C 100%);
+    color: white;
+    overflow: hidden;
+  }
+  .hero-wc::after {
+    content: "26";
+    position: absolute;
+    right: 22px; top: 50%;
+    transform: translateY(-50%);
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    font-size: 168px;
+    letter-spacing: -8px;
+    color: rgba(255,255,255,0.06);
+    line-height: 0.85;
+    pointer-events: none;
+  }
+  .hero-wc .row { position: relative; z-index: 1; }
+  .badge-wc {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 8px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    border-radius: 999px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .badge-wc .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--magenta), var(--cyan));
+  }
+  .hero-wc h1 {
+    font-size: 28px;
+    margin: 0 0 4px;
+    letter-spacing: -0.5px;
+    font-weight: 800;
+    line-height: 1.18;
+    color: white;
+  }
+  .hero-wc h1 .accent {
+    background: linear-gradient(90deg, var(--cyan) 0%, #5BD4FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-wc .tagline {
+    font-size: 12px;
+    color: rgba(255,255,255,0.78);
+    margin: 4px 0 0;
+    font-weight: 400;
+  }
+  .hero-wc .period {
+    margin-top: 12px;
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(90deg, var(--magenta) 0%, #FF3DA0 100%);
+    color: white;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 14px rgba(229,0,135,0.35);
+  }
+
+  h2 {
+    font-size: 14px;
+    margin: 18px 0 8px;
+    font-weight: 800;
+    color: var(--navy);
+    padding: 0 0 4px;
+    letter-spacing: -0.2px;
+    position: relative;
+    display: inline-block;
+  }
+  h2::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    border-radius: 2px;
+  }
+  h3 { font-size: 12px; margin: 8px 0 4px; font-weight: 700; color: var(--ink); }
+
+  /* VALUE keypoints — 3 cards */
+  .keypoints { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 0; }
+  .kpoint {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 12px 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpoint::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .kpoint:nth-child(1)::before { background: var(--cyan); }
+  .kpoint:nth-child(2)::before { background: var(--magenta); }
+  .kpoint:nth-child(3)::before { background: var(--yellow); }
+  .kpoint .num {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .kpoint:nth-child(1) .num { color: var(--cyan); }
+  .kpoint:nth-child(2) .num { color: var(--magenta); }
+  .kpoint:nth-child(3) .num { color: #B58A00; }
+  .kpoint .title { font-size: 12.5px; font-weight: 800; margin: 3px 0 3px; color: var(--navy); }
+  .kpoint .desc { font-size: 10px; color: var(--sub); line-height: 1.45; }
+
+  /* Package flow */
+  .core-flow {
+    background: linear-gradient(135deg, #F8FAFE 0%, var(--accent-soft) 100%);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 4px 0 0;
+  }
+  .flow-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+  .flow-box {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .flow-box.accent {
+    border: none;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(2,15,42,0.20);
+  }
+  .flow-box .lab { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+  .flow-box .nm { font-size: 13px; font-weight: 800; margin-top: 2px; }
+  .flow-box.accent .lab { color: rgba(255,255,255,0.7); }
+  .flow-arrow {
+    color: white;
+    background: linear-gradient(135deg, var(--magenta), var(--cyan));
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800;
+    box-shadow: 0 3px 8px rgba(229,0,135,0.30);
+  }
+
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 0; font-size: 11px; }
+  th {
+    background: var(--navy);
+    color: white;
+    padding: 7px 8px;
+    text-align: center;
+    font-weight: 700;
+    border: 1px solid var(--navy);
+    font-size: 10.5px;
+    letter-spacing: 0.3px;
+  }
+  td { padding: 6px 8px; border: 1px solid var(--line); }
+  td.c { text-align: center; }
+  td.r { text-align: right; }
+  tr.highlight td {
+    background: linear-gradient(90deg, var(--magenta-soft) 0%, var(--accent-soft) 100%);
+    font-weight: 700;
+  }
+
+  /* Bonus 3 choice cards (Page 1) */
+  .choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+  .choice {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 12px 10px;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+  .choice .stripe {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .choice.cyan .stripe { background: linear-gradient(90deg, var(--cyan), #5BD4FF); }
+  .choice.gray .stripe { background: linear-gradient(90deg, var(--blue), #6688AC); }
+  .choice.magenta .stripe { background: linear-gradient(90deg, var(--magenta), #FF3DA0); }
+  .choice .pill-tag {
+    position: absolute; top: 10px; right: 10px;
+    font-size: 8.5px; font-weight: 800;
+    padding: 3px 7px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .choice.cyan .pill-tag { background: var(--yellow); color: var(--navy); }
+  .choice.magenta .pill-tag { background: var(--magenta); color: white; }
+  .choice .ctag {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .choice.cyan .ctag { color: var(--cyan); }
+  .choice.gray .ctag { color: var(--blue); }
+  .choice.magenta .ctag { color: var(--magenta); }
+  .choice .nm { font-size: 14px; font-weight: 800; margin: 3px 0; color: var(--navy); }
+  .choice .ds { font-size: 10px; color: var(--sub); line-height: 1.4; margin-bottom: 8px; }
+  .choice .meta {
+    font-size: 9.5px;
+    color: var(--ink);
+    border-top: 1px dashed var(--line);
+    padding-top: 6px;
+    line-height: 1.55;
+  }
+  .choice .meta strong { color: var(--navy); display: inline-block; min-width: 48px; }
+
+  /* Benefits */
+  .benefits {
+    background: linear-gradient(135deg, #F8FAFE 0%, var(--accent-soft) 100%);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 6px;
+  }
+  .benefit-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(2,15,42,0.12);
+  }
+  .benefit-row:last-child { border-bottom: none; }
+  .benefit-icon {
+    width: 22px; height: 22px;
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .benefit-row:nth-child(1) .benefit-icon { background: var(--cyan); }
+  .benefit-row:nth-child(2) .benefit-icon { background: var(--magenta); }
+  .benefit-row:nth-child(3) .benefit-icon { background: var(--green); }
+  .benefit-content .bt { font-weight: 700; font-size: 11.5px; color: var(--navy); }
+  .benefit-content .bd { font-size: 10px; color: var(--sub); margin-top: 2px; line-height: 1.5; }
+  .benefit-content .bd strong { color: var(--magenta); }
+
+  .footer-info {
+    margin-top: 16px;
+    padding-top: 10px;
+    border-top: 2px solid var(--navy);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+  }
+  .contact-box { font-size: 10px; color: var(--sub); }
+  .contact-box strong { color: var(--navy); font-size: 11px; }
+  .brand-mark {
+    text-align: right;
+    font-size: 9px;
+    color: var(--sub);
+    line-height: 1.45;
+  }
+  .brand-mark .nm {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--navy);
+    letter-spacing: -0.3px;
+  }
+  .brand-mark .nm::after {
+    content: " ●";
+    color: var(--magenta);
+  }
+  .small { font-size: 9px; color: var(--sub); margin-top: 4px; line-height: 1.5; }
+
+  /* ===== Page 2 ===== */
+  .page-header-2 {
+    text-align: center;
+    padding: 16px 0 12px;
+    margin: 6px -36px 14px;
+    background:
+      radial-gradient(ellipse 400px 100px at 50% 100%, rgba(0,181,226,0.18), transparent 70%),
+      linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: white;
+    position: relative;
+  }
+  .page-header-2::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyan) 0%, var(--magenta) 50%, var(--yellow) 100%);
+  }
+  .page-header-2 .ttl { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
+  .page-header-2 .ttl .accent {
+    background: linear-gradient(90deg, var(--cyan), #5BD4FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .page-header-2 .sub { font-size: 11px; color: rgba(255,255,255,0.78); margin-top: 4px; }
+
+  /* Audience pack cards */
+  .audience-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .ap-card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px 10px;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+  .ap-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+  }
+  .ap-card:nth-child(1)::before { background: linear-gradient(180deg, var(--cyan), #5BD4FF); }
+  .ap-card:nth-child(2)::before { background: linear-gradient(180deg, var(--magenta), #FF3DA0); }
+  .ap-card:nth-child(3)::before { background: linear-gradient(180deg, var(--yellow), #FFC700); }
+  .ap-card:nth-child(4)::before { background: linear-gradient(180deg, var(--green), #1ABF7A); }
+  .ap-card .ap-num {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 4px;
+  }
+  .ap-card .ap-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 4px 0 4px;
+    line-height: 1.2;
+  }
+  .ap-card:nth-child(1) .ap-title { color: #008CB0; }
+  .ap-card:nth-child(2) .ap-title { color: var(--magenta); }
+  .ap-card:nth-child(3) .ap-title { color: #B58A00; }
+  .ap-card:nth-child(4) .ap-title { color: var(--green); }
+  .ap-card .ap-concept {
+    font-size: 10px;
+    color: var(--sub);
+    font-style: italic;
+    margin-bottom: 7px;
+    border-left: 2px solid var(--line);
+    padding-left: 7px;
+    line-height: 1.45;
+  }
+  .ap-card .ap-section { margin-bottom: 5px; }
+  .ap-card .ap-label {
+    font-size: 9px;
+    color: var(--navy);
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+  .ap-card .ap-text {
+    font-size: 10px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .ap-card .ap-rec {
+    margin-top: 6px;
+    padding: 6px 8px;
+    background: var(--accent-soft);
+    border-radius: 5px;
+    font-size: 9.5px;
+    line-height: 1.45;
+  }
+  .ap-card:nth-child(2) .ap-rec { background: var(--magenta-soft); }
+  .ap-card:nth-child(3) .ap-rec { background: #FFF7D6; }
+  .ap-card:nth-child(4) .ap-rec { background: var(--good-soft); }
+  .ap-card .ap-rec strong { color: var(--navy); }
+
+  /* Kakao bcat guide */
+  .bcat-section { margin-top: 14px; }
+  .bcat-intro {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--cyan);
+    padding: 9px 11px;
+    border-radius: 0 6px 6px 0;
+    font-size: 10px;
+    color: var(--sub);
+    margin-bottom: 8px;
+    line-height: 1.55;
+  }
+  .bcat-table { font-size: 10px; }
+  .bcat-table th { padding: 6px 6px; font-size: 10px; }
+  .bcat-table td { padding: 4px 7px; font-size: 9.5px; }
+  .bcat-table td.cat { font-weight: 700; }
+  .bcat-table .ok { color: var(--good); font-weight: 800; }
+  .bcat-table .ng { color: var(--bad); font-weight: 800; }
+  .bcat-table tr.full-ng td { background: var(--bad-soft); }
+  .bcat-table tr.full-ok td:first-child { color: var(--good); font-weight: 800; }
+  .bcat-table tr.partial td { background: #FFF7D6; }
+
+  .legend { display: flex; gap: 12px; font-size: 10px; margin-top: 6px; color: var(--sub); flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 4px; }
+  .legend .dot.ok { color: var(--good); font-weight: 800; }
+  .legend .dot.ng { color: var(--bad); font-weight: 800; }
+  .legend .chip {
+    padding: 1px 7px; border-radius: 4px; font-size: 9.5px;
+  }
+  .legend .chip.ng { background: var(--bad-soft); color: var(--bad); }
+  .legend .chip.partial { background: #FFF7D6; color: #8B6500; }
+
+  /* CTA section (Page 1 + Page 2 종결부) */
+  .cta-section {
+    position: relative;
+    margin: 16px -36px 12px;
+    padding: 18px 36px;
+    background:
+      radial-gradient(ellipse 400px 100px at 85% 30%, rgba(229,0,135,0.28), transparent 60%),
+      radial-gradient(ellipse 400px 100px at 15% 80%, rgba(0,181,226,0.22), transparent 60%),
+      linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+    overflow: hidden;
+  }
+  .cta-section::after {
+    content: "⚽";
+    position: absolute;
+    right: -8px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 90px;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+  .cta-section .cta-text .ct1 {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: white;
+  }
+  .cta-section .cta-text .ct2 {
+    font-size: 10px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+  .cta-section .cta-btns {
+    display: flex;
+    gap: 8px;
+    z-index: 1;
+  }
+  .cta-section .cta-btn {
+    display: inline-block;
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+    transition: transform 0.15s ease;
+  }
+  .cta-section .cta-btn:hover { transform: translateY(-1px); }
+  .cta-section .cta-btn.primary {
+    background: linear-gradient(90deg, var(--magenta) 0%, #FF3DA0 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(229,0,135,0.40);
+  }
+  .cta-section .cta-btn.secondary {
+    background: white;
+    color: var(--navy);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; box-shadow: none; }
+    .cta-section { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE 1 — 패키지 핵심 ========== -->
+<div class="page">
+
+<header class="hero-wc">
+  <div class="row">
+    <span class="badge-wc"><span class="dot"></span>2026 FIFA WORLD CUP · WE ARE 26</span>
+    <h1>프리미엄 노출형 상품 × 월드컵 관심 유저 타겟.<br><span class="accent">예산 별 보너스 상품 추가 노출까지.</span></h1>
+    <p class="tagline">프리미엄 노출형 패키지 — 부담은 줄이고, 노출은 두 배로</p>
+    <div class="period">📅 프로모션 기간: ~2026.07월 내 라이브 되는 캠페인</div>
+  </div>
+</header>
+
+<section>
+  <h2>이 패키지의 핵심 가치</h2>
+  <div class="keypoints">
+    <div class="kpoint">
+      <div class="num">VALUE 01</div>
+      <div class="title">프리미엄 매체 골든 슬랏</div>
+      <div class="desc">월드컵 트래픽 폭증 시기, 카카오톡·다음·티맵·키즈노트 등 프리미엄 노출형 매체에 직노출.</div>
+    </div>
+    <div class="kpoint">
+      <div class="num">VALUE 02</div>
+      <div class="title">3종 보너스 노출</div>
+      <div class="desc">광고주 캠페인 결에 맞춰 3종 보너스 상품 중 자유 선택. 같은 부킹 예산에 추가 노출 보장.</div>
+    </div>
+    <div class="kpoint">
+      <div class="num">VALUE 03</div>
+      <div class="title">월드컵 코어 오디언스</div>
+      <div class="desc">AI 기반 월드컵 최적화 타겟 4종 시나리오 + 캠페인 종료 후 오디언스 분석 리포트 무상 제공.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>패키지 구조 — 프리미엄 노출형 트랙</h2>
+  <div class="core-flow">
+    <div class="flow-row">
+      <div class="flow-box accent">
+        <div class="lab">부킹 상품 (프리미엄 노출형)</div>
+        <div class="nm">Kakao x nap dsp</div>
+        <div class="small" style="margin-top: 4px; color: rgba(255,255,255,0.7);">카카오톡·다음·티맵·키즈노트·에브리타임 등</div>
+      </div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-box">
+        <div class="lab">보너스 노출</div>
+        <div class="nm">3종 중 택 1</div>
+        <div class="small" style="margin-top: 4px;">예산 구간별 +3% / +5% / +10%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>부킹 예산 구간 별 보너스 비율</h2>
+  <table>
+    <thead><tr><th>부킹 예산 (1개월 기준, VAT 별도)</th><th>보너스 비율</th><th>적용 예시</th></tr></thead>
+    <tbody>
+      <tr><td class="c">500만 ~ 3,000만 미만</td><td class="c"><strong style="color:var(--cyan)">+3%</strong></td><td class="r">2,000만 부킹 → 60만원 분량 추가</td></tr>
+      <tr><td class="c">3,000만 ~ 5,000만 미만</td><td class="c"><strong style="color:var(--magenta)">+5%</strong></td><td class="r">4,000만 부킹 → 200만원 분량 추가</td></tr>
+      <tr class="highlight"><td class="c">5,000만 이상</td><td class="c"><strong style="color:var(--magenta)">+10%</strong></td><td class="r">1억 부킹 → 1,000만원 분량 추가 ⭐</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>광고주 선택 가능 보너스 상품 — 3종 중 택 1</h2>
+  <div class="choice-grid">
+    <div class="choice cyan">
+      <div class="stripe"></div>
+      <div class="pill-tag">RECOMMENDED</div>
+      <div class="ctag">CHOICE A</div>
+      <div class="nm">Video Brand Lift</div>
+      <div class="ds">언론사·OK캐시백·SOOP·CJ ONE·T 멤버십 등 프리미엄 영상 매체</div>
+      <div class="meta">
+        <strong>FOR:</strong> 영상 소재 보유 광고주<br>
+        <strong>PROFILE:</strong> 인지도·브랜딩 KPI<br>
+        <strong>FORMAT:</strong> 5~240초 Video (MO·PC)
+      </div>
+    </div>
+    <div class="choice gray">
+      <div class="stripe"></div>
+      <div class="ctag">CHOICE B</div>
+      <div class="nm">DA Brand Lift</div>
+      <div class="ds">다음·T 멤버십·KB PAY·CJ ONE·캐치테이블·캐시워크 등 광범위 매체</div>
+      <div class="meta">
+        <strong>FOR:</strong> 영상 소재 미보유 광고주<br>
+        <strong>PROFILE:</strong> 도달·DMP 타겟팅<br>
+        <strong>FORMAT:</strong> DA 배너 (MO·PC)
+      </div>
+    </div>
+    <div class="choice magenta">
+      <div class="stripe"></div>
+      <div class="pill-tag">월드컵 ⚽</div>
+      <div class="ctag">CHOICE C</div>
+      <div class="nm">DA Men's Network</div>
+      <div class="ds">디시인사이드·에펨코리아·MLB PARK·인벤·OP.GG 등 남성 스포츠 커뮤니티</div>
+      <div class="meta">
+        <strong>FOR:</strong> AOS 노출 캠페인 한정<br>
+        <strong>PROFILE:</strong> 월드컵 시청 헤비층<br>
+        <strong>FORMAT:</strong> DA 배너 (AOS only)
+      </div>
+    </div>
+  </div>
+  <div class="small" style="margin-top: 8px;">※ 광고주 소재 보유 형태(영상/DA)와 캠페인 KPI(인지·도달·월드컵 컨셉)에 따라 1개 선택. DA Men's Network는 AOS 노출 캠페인 한정 옵션.</div>
+</section>
+
+<section>
+  <h2>월드컵 패키지 한정 — 공통 혜택</h2>
+  <div class="benefits">
+    <div class="benefit-row">
+      <div class="benefit-icon">1</div>
+      <div class="benefit-content">
+        <div class="bt">AI 기반 월드컵 코어 오디언스팩 — 4종 시나리오 (다음 페이지 ▶)</div>
+        <div class="bd">국가대표 응원·실시간 소비 / 여행·해외 액티비티 / 라이프스타일 트렌드(MZ) / 가족 단위 시즈널 — 광고주 업종별 복수 선택 가능, 상세 시나리오는 다음 페이지에서 확인</div>
+      </div>
+    </div>
+    <div class="benefit-row">
+      <div class="benefit-icon">2</div>
+      <div class="benefit-content">
+        <div class="bt">오디언스 분석 리포트 무상 1회 제공</div>
+        <div class="bd">기존 정책: 1개월 2,000만(VAT 별도) 이상 집행 시 제공 → <strong>월드컵 패키지 한정으로 예산 구간 무관, 캠페인 종료 후 1회 무상 제공.</strong></div>
+      </div>
+    </div>
+    <div class="benefit-row">
+      <div class="benefit-icon">3</div>
+      <div class="benefit-content">
+        <div class="bt">경기 시간 집중 운영 옵션</div>
+        <div class="bd">한국 경기 시간(오전 7시~오후 1시) 기준 시간 타겟팅 결합. 경기 일정에 맞춘 노출 우선순위 자동 조정.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <div class="cta-text">
+    <div class="ct1">월드컵 패키지, 지금 바로 부킹 가능합니다.</div>
+    <div class="ct2">예상 단가·노출·클릭을 직접 시뮬레이션해보고 제안 요청까지 한 번에</div>
+  </div>
+  <div class="cta-btns">
+    <a href="worldcup_simulator.html" class="cta-btn secondary">📊 혜택 시뮬레이터</a>
+    <a href="mailto:nap_dsp@nasmedia.co.kr?subject=2026%20World%20Cup%20%ED%8C%A8%ED%82%A4%EC%A7%80%20%EC%A0%9C%EC%95%88%20%EC%9A%94%EC%B2%AD" class="cta-btn primary">📧 제안하러 가기</a>
+  </div>
+</div>
+
+<div class="footer-info">
+  <div class="contact-box">
+    <strong>문의 · 부킹</strong> · 📧 nap_dsp@nasmedia.co.kr<br>
+    📌 부킹 마감: 캠페인 라이브 영업일 기준 2일 전 (소재 검수 포함)
+  </div>
+  <div class="brand-mark">
+    <div class="nm">nap dsp</div>
+    KT 나스미디어 AI 기반 DSP<br>
+    국내 최초 TAG Brand Safety CERTIFIED
+  </div>
+</div>
+
+</div>
+
+
+<!-- ========== PAGE 2 — 코어 오디언스팩 + Kakao 노출 가이드 ========== -->
+<div class="page">
+
+<div class="page-header-2">
+  <div class="ttl">월드컵 코어 오디언스팩 <span class="accent">Top 4</span></div>
+  <div class="sub">AI 기반 월드컵 최적화 타겟팅 시나리오 — 광고주 업종에 따라 복수 선택 가능</div>
+</div>
+
+<div class="audience-grid">
+
+  <!-- Audience Pack 1 -->
+  <div class="ap-card">
+    <span class="ap-num">PACK 01</span>
+    <div class="ap-title">국가대표 응원 &<br>실시간 소비 유저</div>
+    <div class="ap-concept">"경기 시작과 동시에 폭증하는 응원·간식·SNS 활동을 따라가는 헤비 시청층"</div>
+    <div class="ap-section">
+      <span class="ap-label">DATA</span>
+      <div class="ap-text">TG 360 DMP(스포츠용품·유니폼 결제) + Lotte DMP(편의점·간편식·치킨·맥주) + 라이브스코어·중계 앱 다 빈도 사용자</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">KEYWORD</span>
+      <div class="ap-text">월드컵 · 국가대표 · 손흥민 · 이강인 · 경기 일정 · 메달 순위</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">TIME</span>
+      <div class="ap-text">경기 시간 7~13시 집중 + 야간 22~02시 보조</div>
+    </div>
+    <div class="ap-rec"><strong>추천 광고주:</strong> 식음료(맥주·치킨·배달·간편식), 통신사, 대형 가전(OLED TV), 모바일 게임</div>
+  </div>
+
+  <!-- Audience Pack 2 -->
+  <div class="ap-card">
+    <span class="ap-num">PACK 02</span>
+    <div class="ap-title">여행 · 해외 액티비티<br>자극형 유저</div>
+    <div class="ap-concept">"북중미 개최를 계기로 항공·호캉스·여름방학 여행 검색·구매에 적극 반응하는 중상위 소득층"</div>
+    <div class="ap-section">
+      <span class="ap-label">DATA</span>
+      <div class="ap-text">Loplat DMP(공항·여행사·면세점 매장 방문) + TG 360(항공·숙박·여행사 결제) + Lotte(면세점)</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">KEYWORD</span>
+      <div class="ap-text">미국·캐나다·멕시코 여행 · 북중미 항공권 · 호캉스 · 여름휴가 · 신혼여행</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">PERSONA</span>
+      <div class="ap-text">중상위 소득(N.DMP 소비수준 4단계 이상) · 항공/숙박 검색·예약 이력</div>
+    </div>
+    <div class="ap-rec"><strong>추천 광고주:</strong> 항공사, 종합여행사, 호텔·리조트, 면세점, 카드사, 환전 서비스</div>
+  </div>
+
+  <!-- Audience Pack 3 -->
+  <div class="ap-card">
+    <span class="ap-num">PACK 03</span>
+    <div class="ap-title">라이프스타일 &<br>트렌드 소비 유저 (MZ)</div>
+    <div class="ap-concept">"브랜드 콜라보·한정판·스타 선수 굿즈에 즉각 반응하는 MZ 세대, SNS 다 빈도 활동층"</div>
+    <div class="ap-section">
+      <span class="ap-label">DATA</span>
+      <div class="ap-text">SKP DMP(11번가 결제·쇼핑) + Lotte(뷰티·패션 카테고리 상위) + NHN Dighty(SNS 앱)</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">KEYWORD</span>
+      <div class="ap-text">브랜드 콜라보 · 한정판 · 비하인드 · 스타선수 굿즈 · 응원 유니폼 · 축구화</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">PERSONA</span>
+      <div class="ap-text">MZ(20~30대) · 패션·뷰티·콜라보 한정판 관심 · SNS 다 빈도</div>
+    </div>
+    <div class="ap-rec"><strong>추천 광고주:</strong> 스포츠 의류·신발(나이키·아디다스 등), 뷰티·코스메틱, 패션·럭셔리</div>
+  </div>
+
+  <!-- Audience Pack 4 -->
+  <div class="ap-card">
+    <span class="ap-num">PACK 04</span>
+    <div class="ap-title">국가 이벤트 관망 ·<br>일상 확장형 유저 (가족)</div>
+    <div class="ap-concept">"월드컵 자체보다 그 시즌의 이벤트·할인·가족 행사에 반응하는 일반 다수 소비층"</div>
+    <div class="ap-section">
+      <span class="ap-label">DATA</span>
+      <div class="ap-text">KB AdMarket(가족 결제·디바이스) + N.DMP(가족 단위·결혼/자녀) + Lotte(대형마트·생필품)</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">KEYWORD</span>
+      <div class="ap-text">월드컵 할인 · 여름방학 이벤트 · 가족 행사 · 캠핑 · 호캉스 · 여름방학 캠프</div>
+    </div>
+    <div class="ap-section">
+      <span class="ap-label">PERSONA</span>
+      <div class="ap-text">가족 단위 다인 가구 · 시즈널 이벤트 다 빈도 · 뉴스/포털 메인 소비</div>
+    </div>
+    <div class="ap-rec"><strong>추천 광고주:</strong> 대형마트, 대형 가전, 자동차, 보험, 통신사, 신용카드(시즈널 할인)</div>
+  </div>
+
+</div>
+
+<!-- Kakao bcat 가이드 -->
+<div class="bcat-section">
+  <h2>프리미엄 노출형 상품 제한 업종 가이드 (IAB 1.0 기준 · 2026.01)</h2>
+  <div class="bcat-intro">
+    프리미엄 노출형 상품 부킹은 매체 정책상 일부 업종에 대해 지면별(채팅리스트·숏폼탭 피드형·비즈보드·네이티브) 노출이 제한됩니다. 광고주 업종 확인 후 진행 가능 여부를 먼저 점검해주세요. 본 가이드는 매체 공식 가이드(2026.01 ver) 기준이며, 정책 변경 시 갱신됩니다.
+  </div>
+
+  <table class="bcat-table">
+    <thead>
+      <tr><th>IAB</th><th>업종 분류</th><th>채팅리스트</th><th>숏폼탭 피드형</th><th>비즈보드</th><th>네이티브</th></tr>
+    </thead>
+    <tbody>
+      <tr class="full-ok"><td>IAB1</td><td class="cat">Arts & Entertainment (영화·음악·예술)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="partial"><td>IAB2</td><td class="cat">Automotive (자동차) · IAB2-5(Customs/4x4)는 채팅·숏폼 ❌</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB3</td><td class="cat">Business (마케팅·경영·창업)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB4</td><td class="cat">Careers (채용·이력서·직업교육)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB5</td><td class="cat">Education (학교·유학·언어학습)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB6</td><td class="cat">Family & Parenting (육아·가족)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ng"><td>IAB7</td><td class="cat">Health & Fitness (질병·운동·약물 등 전체)</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td></tr>
+      <tr class="partial"><td>IAB8</td><td class="cat">Food & Drink · IAB8-5(요리)·IAB8-18(주류)는 숏폼·네이티브만</td><td class="c ng">❌</td><td class="c ok">✅</td><td class="c ng">❌</td><td class="c ok">✅</td></tr>
+      <tr class="partial"><td>IAB9</td><td class="cat">Hobbies · IAB9-7(카드)·9-9(비디오게임)은 전 지면 ❌, 9-25/30(매직·퍼즐)은 숏폼 이하</td><td class="c ng">❌</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB10</td><td class="cat">Home & Garden (인테리어·가구·원예)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="partial"><td>IAB11</td><td class="cat">Personal Finance · IAB11-3(대출)·11-4(보험)는 네이티브만 ✅</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB12</td><td class="cat">News (국내외 뉴스·날씨)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ng"><td>IAB13</td><td class="cat">Personal Pleasures (성인·복권·운세 등 전체)</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td></tr>
+      <tr class="partial"><td>IAB14</td><td class="cat">Society · IAB14-1(법률)·14-3(정치) 전 지면 ❌ / 14-5(사회이슈) 네이티브 ❌</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ng">❌</td></tr>
+      <tr class="full-ng"><td>IAB15</td><td class="cat">Science (과학 일반)</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td></tr>
+      <tr class="partial"><td>IAB16</td><td class="cat">Pets (반려동물) · 채팅리스트 ❌</td><td class="c ng">❌</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB17</td><td class="cat">Sports (축구·야구·골프 등 전체) ⚽ 월드컵 핵심</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ng"><td>IAB18</td><td class="cat">Style & Fashion · IAB18-2(의류) 전 지면 ❌ (그 외 가능)</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td></tr>
+      <tr class="full-ok"><td>IAB19</td><td class="cat">Technology (가전·IT기기·소프트웨어)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ok"><td>IAB20</td><td class="cat">Travel (호텔·항공권·렌터카) ✈️ 월드컵 핵심</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="partial"><td>IAB21</td><td class="cat">Real Estate (아파트·부동산) — 비즈보드만 ✅</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ok">✅</td><td class="c ng">❌</td></tr>
+      <tr class="full-ok"><td>IAB22</td><td class="cat">Shopping (온라인 쇼핑·할인·쿠폰)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ng"><td>IAB23</td><td class="cat">Religion (종교·점술·영성 전체)</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td></tr>
+      <tr class="full-ok"><td>IAB24</td><td class="cat">Wealth Mgmt (주식·투자)</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td><td class="c ok">✅</td></tr>
+      <tr class="full-ng"><td>IAB25</td><td class="cat">Business (산업 — 건설·농업·광고 등)</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td></tr>
+      <tr class="full-ng"><td>IAB26</td><td class="cat">Sensitive (도박·민감 콘텐츠 전체)</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td><td class="c ng">❌</td></tr>
+    </tbody>
+  </table>
+
+  <div class="legend">
+    <span><span class="dot ok">✅</span> 노출 가능</span>
+    <span><span class="dot ng">❌</span> 노출 불가</span>
+    <span class="chip ng">전 지면 불가</span>
+    <span class="chip partial">지면별 부분 가능</span>
+  </div>
+
+  <div class="small" style="margin-top: 8px;">
+    ※ 월드컵 패키지 본 시즌 ⚽ Sports(IAB17), ✈️ Travel(IAB20), 🛒 Shopping(IAB22), 🏠 Home&Garden(IAB10), 🎬 Arts&Entertainment(IAB1), 🚗 Automotive(IAB2 일반), 📺 Technology(IAB19) 업종은 프리미엄 노출형 상품 전 지면 노출 가능 — 본 4종 오디언스팩과 매칭도 좋음.<br>
+    ※ 보험·대출은 매체 정책상 네이티브 외 노출 불가, 의류는 전 지면 불가 — 캠페인 사전 협의 필요.<br>
+    ※ 본 가이드는 매체 공식 정책(2026.01 ver) 기준이며, 변경 시 갱신됩니다.
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-text">
+    <div class="ct1">광고주 조건 입력하면, 예상 노출·클릭이 즉시 계산됩니다.</div>
+    <div class="ct2">시뮬레이션 결과 화면을 그대로 캡쳐해 제안 요청 메일로 전송 가능</div>
+  </div>
+  <div class="cta-btns">
+    <a href="worldcup_simulator.html" class="cta-btn secondary">📊 혜택 시뮬레이터</a>
+    <a href="mailto:nap_dsp@nasmedia.co.kr?subject=2026%20World%20Cup%20%ED%8C%A8%ED%82%A4%EC%A7%80%20%EC%A0%9C%EC%95%88%20%EC%9A%94%EC%B2%AD" class="cta-btn primary">📧 제안하러 가기</a>
+  </div>
+</div>
+
+<div class="footer-info">
+  <div class="contact-box">
+    <strong>문의 · 부킹</strong> · 📧 nap_dsp@nasmedia.co.kr
+  </div>
+  <div class="brand-mark">
+    <div class="nm">nap dsp</div>
+    KT 나스미디어 AI 기반 DSP
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>
